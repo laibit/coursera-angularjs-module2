@@ -1,11 +1,7 @@
 (function () {
 'use strict';
 
-var shoppingList1 = [
-  "Milk", "Donuts", "Cookies", "Chocolate", "Peanut Butter", "Pepto Bismol", "Pepto Bismol (Chocolate flavor)", "Pepto Bismol (Cookie flavor)"
-];
-
-var shoppingList2 = [
+var shoppingList = [
   {
     name: "Milk",
     quantity: "2"
@@ -24,22 +20,68 @@ var shoppingList2 = [
   }
 ];
 
-angular.module('ShoppingListApp', [])
-.controller('ShoppingListController', ShoppingListController);
+angular.module('ShoppingListCheckOff', [])
+.controller('ToBuyShoppingController', ToBuyShoppingController)
+.controller('AlreadyBoughtShoppingController', AlreadyBoughtShoppingController)
+.service('ShoppingListCheckOffService', ShoppingListCheckOffService);
 
-ShoppingListController.$inject = ['$scope'];
-function ShoppingListController($scope) {
-  $scope.shoppingList1 = shoppingList1;
-  $scope.shoppingList2 = shoppingList2;
+ToBuyShoppingController.$inject = ['ShoppingListCheckOffService'];
+function ToBuyShoppingController(ShoppingListCheckOffService) {
+  var buyList = this;
 
-  $scope.addToList = function () {
-    var newItem = {
-      name: $scope.newItemName,
-      quantity: $scope.newItemQuantity
-    };
 
-    $scope.shoppingList2.push(newItem);
+}
+
+AlreadyBoughtShoppingController.$inject = ['ShoppingListCheckOffService'];
+function AlreadyBoughtShoppingController(ShoppingListCheckOffService) {
+  var boughtList = this;
+
+
+}
+
+function ShoppingListCheckOffService() {
+  var service = this;
+
+  // List of shopping items
+  var itemsToBuy = [
+  {
+    name: "Milk",
+    quantity: "2"
+  },
+  {
+    name: "Donuts",
+    quantity: "200"
+  },
+  {
+    name: "Cookies",
+    quantity: "300"
+  },
+  {
+    name: "Chocolate",
+    quantity: "5"
+  }
+  ];
+
+  var itemsBought = [];
+
+  service.buyItem = function (itemIndex) {
+    itemsBought.push(itemsToBuy[itemIndex]);
+    itemsToBuy.splice(itemIndex, 1);
+  };
+
+  service.returnItem = function (itemIndex) {
+    itemsToBuy.push(itemsBought[itemIndex]);
+    itemsBought.splice(itemIndex, 1);
+  };
+
+  service.getItemsToBuy = function () {
+    return itemsToBuy;
+  };
+
+  service.getItemsBought = function () {
+    return itemsToBuy;
   };
 }
+
 
 })();

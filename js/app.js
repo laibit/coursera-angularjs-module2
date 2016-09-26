@@ -1,25 +1,6 @@
 (function () {
 'use strict';
 
-var shoppingList = [
-  {
-    name: "Milk",
-    quantity: "2"
-  },
-  {
-    name: "Donuts",
-    quantity: "200"
-  },
-  {
-    name: "Cookies",
-    quantity: "300"
-  },
-  {
-    name: "Chocolate",
-    quantity: "5"
-  }
-];
-
 angular.module('ShoppingListCheckOff', [])
 .controller('ToBuyShoppingController', ToBuyShoppingController)
 .controller('AlreadyBoughtShoppingController', AlreadyBoughtShoppingController)
@@ -29,14 +10,18 @@ ToBuyShoppingController.$inject = ['ShoppingListCheckOffService'];
 function ToBuyShoppingController(ShoppingListCheckOffService) {
   var buyList = this;
 
+  buyList.items = ShoppingListCheckOffService.getItemsToBuy();
 
+  buyList.removeItem = function (itemIndex) {
+    ShoppingListCheckOffService.buyItem(itemIndex);
+  };
 }
 
 AlreadyBoughtShoppingController.$inject = ['ShoppingListCheckOffService'];
 function AlreadyBoughtShoppingController(ShoppingListCheckOffService) {
   var boughtList = this;
 
-
+  boughtList.items = ShoppingListCheckOffService.getItemsBought();
 }
 
 function ShoppingListCheckOffService() {
@@ -50,15 +35,19 @@ function ShoppingListCheckOffService() {
   },
   {
     name: "Donuts",
-    quantity: "200"
+    quantity: "5"
   },
   {
     name: "Cookies",
-    quantity: "300"
+    quantity: "10"
   },
   {
     name: "Chocolate",
     quantity: "5"
+  },
+  {
+    name: "Bananas",
+    quantity: "12"
   }
   ];
 
@@ -69,19 +58,13 @@ function ShoppingListCheckOffService() {
     itemsToBuy.splice(itemIndex, 1);
   };
 
-  service.returnItem = function (itemIndex) {
-    itemsToBuy.push(itemsBought[itemIndex]);
-    itemsBought.splice(itemIndex, 1);
-  };
-
   service.getItemsToBuy = function () {
     return itemsToBuy;
   };
 
   service.getItemsBought = function () {
-    return itemsToBuy;
+    return itemsBought;
   };
 }
-
 
 })();
